@@ -1,9 +1,15 @@
-//Jeremy McCormick
+ //Jeremy McCormick
 // CS 201 Assignment 1
 // bst.c
 #include <assert.h>
+#include <math.h>
 #include "bst.h"
 #include "queue.h"
+
+
+//////////////////////////////
+//          bstnode.c       //
+//////////////////////////////
 
 struct bstnode
 {
@@ -42,7 +48,10 @@ void    freeBSTNODE(BSTNODE *n,void (*free)(void *))
     free(n);
 }
 
-//BST, uses the above bst Node code
+//////////////////////////////
+//          bst.c           //
+//////////////////////////////
+
 struct bst
 {
     BSTNODE * root;
@@ -122,9 +131,27 @@ BSTNODE *insertBSTrecurse(BSTNODE *t,BSTNODE *newNode)
 
 BSTNODE *findBST(BST *t,void *value)
 {
-    
+    return findBSTrecurse(t->root,t,value);
 }
-    extern BSTNODE *deleteBST(BST *t,void *value);
+
+BSTNODE *findBSTrecurse(BSTNODE *node, BST *t, void *value)
+{
+    if(getBSTNODEleft(node) == NULL && getBSTNODEright(node) == NULL)
+        return NULL;
+    
+    if(t->compare(getBSTNODE(node), value) == 0)
+        return node;
+    
+    if(t->compare(getBSTNODE(node), value) >= 0)
+        return findBSTrecurse(getBSTNODEright(node),t,value);
+    
+    if(t->compare(getBSTNODE(node), value) < 0)
+        return findBSTrecurse(getBSTNODEleft(node),t,value); 
+}
+    
+BSTNODE *deleteBST(BST *t,void *value)
+{
+}
     extern BSTNODE *swapToLeafBST(BST *t,BSTNODE *node);
     extern void    pruneLeafBST(BST *t,BSTNODE *leaf);
     extern int     sizeBST(BST *t);
@@ -132,3 +159,98 @@ BSTNODE *findBST(BST *t,void *value)
     extern void    displayBST(BST *t,FILE *fp);
     extern void    displayBSTdebug(BST *t,FILE *fp);
     extern void    freeBST(BST *t);
+
+ 
+ 
+ 
+/////////////////////////////////
+//          heap.c             //
+/////////////////////////////////
+    
+struct heap 
+{
+    BSTNODE * root;
+    int size;
+    void (*display)(void *,FILE *);
+    int (*compare)(void *,void *);
+    void (*free)(void *);
+}
+    
+HEAP *newHEAP(
+        void (*d)(void *,FILE *),    //display
+        int (*c)(void *,void *),     //compare
+        void (*f)(void *))          //free
+{
+    HEAP * heap = malloc(sizeof(HEAP));
+    heap->root = NULL;
+    heap->size = 0;
+    heap->display = d;
+    heap->compare = c;
+    heap->free    = f;
+    return heap;
+}
+
+void insertHEAP(HEAP *h,void *value)
+{
+    BSTNODE * newNode = newBSTNODE(value);
+    
+    if(h->size == 0)
+    {
+        h->root = newNode;
+        h->size++;
+        return;
+    }
+    
+    
+    // To find the open spot we get the binary representatin of the size
+    // skip the msb, then the next digit we go right if 1 or left if 0. The LSB tells
+    // us put as the right child if 1, left if 0
+    int binaryLength = ceil(log(h->size));
+    int size = h->size;
+    BSTNODE * current = h->root
+    for( int i = binaryLength; i >= 0; i--)
+    {
+            int bit = h & (2^i);
+            if(i == binaryLength)
+                continue;
+            
+            if(bit == 1)
+            {
+                current = getBSTNODEright(current);
+                continue;
+            }
+            if(bit == 0)
+            {
+                current = getBSTNODEleft(current);
+                continue;
+            }
+            
+            if(bit == 1 && i == 0)
+            {
+                setBSTNODEright(current,newNode);
+                setBSTNODEparent(newNode,current);
+                return;
+            }
+            if(bit == 1 && i == 0)
+            {
+                setBSTNODEleft(current,newNode);
+                setBSTNODEparent(newNode,current);
+                return;
+            }
+    }
+    
+}
+    extern void buildHEAP(HEAP *h);
+
+void *peekHEAP(HEAP *h)
+{
+        return h->bst
+}
+    extern void *extractHEAP(HEAP *h);
+    extern int  sizeHEAP(HEAP *h);
+    extern void displayHEAP(HEAP *h,FILE *fp);
+    extern void displayHEAPdebug(HEAP *h);
+    extern void freeHEAP(HEAP *h);
+    
+    
+    
