@@ -122,7 +122,7 @@ void insertHEAP(HEAP *h,void *value)
                 setBSTNODEparent(newNode,current);
                 return;
             }
-            if(bit == 1 && i == 0)
+            if(bit == 0 && i == 0)
             {
                 setBSTNODEleft(current,newNode);
                 setBSTNODEparent(newNode,current);
@@ -167,14 +167,48 @@ void maxheapify(HEAP * heap, BSTNODE * n)
 
 void *peekHEAP(HEAP *h)
 {
-        return h->bst
+        return heap->root;
 }
 
-void *extractHEAP(HEAP *h);
-    extern int  sizeHEAP(HEAP *h);
-    extern void displayHEAP(HEAP *h,FILE *fp);
-    extern void displayHEAPdebug(HEAP *h);
-    extern void freeHEAP(HEAP *h);
+void *extractHEAP(HEAP *h)
+{
+    BSTNODE * lastNode = pop(buildStack);
+    void * ret = getBSTNODE(h->root);
+    void * tmp = getBSTNODE(lastNode);
+    
+    setBSTNODE(h->root, tmp);
+    
+    if(lastNode == getBSTNODEleft(getBSTNODEparent(lastNode)))
+    {
+        setBSTNODEleft(getBSTNODEparent(lastNode) , NULL);
+    }
+    else
+    {
+        setBSTNODEright(getBSTNODEparent(lastNode) , NULL);
+    }
+    freeBSTNODE(lastNode);
+    
+    heapify(h->root);
+}
+
+int  sizeHEAP(HEAP *h)
+{
+        return h->size;
+}
+
+void displayHEAP(HEAP *h,FILE *fp)
+void displayHEAPdebug(HEAP *h)
+
+void freeHEAP(HEAP *h)
+{
+    while(sizeSTACK(buildStack) > 0)
+    {
+        freeBSTNODE( pop(buildStack));
+    }
+    free(h->display)
+    free(h->compare)
+    free(h->free)
+}
     
     
     
