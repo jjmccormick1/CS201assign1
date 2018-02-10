@@ -19,6 +19,6 @@ valgrind: heapsort
 	@./valgrind heapsort
 
 clean:
-	@rm *.o
-	@rm heapsort
-	@rm *.gch
+	@rm -f *.o
+	@rm -f heapsort
+	@rm -f *.gch
