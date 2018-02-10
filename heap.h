@@ -3,8 +3,6 @@
 // CS 201 Assignment 1
 // heap.h
 
-#ifndef __BST_INCLUDED__
-    #define __BST_INCLUDED__
 
     #include <stdio.h>
 //BST Node protion, incuded here for privacy as BST will be the only thing using it
@@ -47,7 +45,7 @@
     extern void    displayBST(BST *t,FILE *fp);
     extern void    displayBSTdebug(BST *t,FILE *fp);
     extern void    freeBST(BST *t);
-    #endif
+
 
     ///////////////////////////////
     //  Heap.h                   //

@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include "node.h"
 #include "sll.h"
 
 struct sll

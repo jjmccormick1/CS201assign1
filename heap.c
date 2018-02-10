@@ -3,9 +3,10 @@
 // bst.c
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
 #include "queue.h"
 #include "stack.h"
-
+#include "heap.h"
 //////////////////////////////
 //          bstnode.c       //
 //////////////////////////////
@@ -40,7 +41,7 @@ void    setBSTNODEparent(BSTNODE *n,BSTNODE *replacement){ n->parent = replaceme
 
 void    freeBSTNODE(BSTNODE *n)
 {
-    free(n->value;)
+    free(n->value);
     free(n->parent);
     free(n->left);
     free(n->right);
@@ -52,7 +53,7 @@ void    freeBSTNODE(BSTNODE *n)
 //          heap.c             //
 /////////////////////////////////
     
-QUEUE * queue;
+QUEUE * inQueue;
 STACK * buildStack;  //stack to keep track of inserted nodes for build heap operation
 
 struct heap 
@@ -82,8 +83,9 @@ void insertHEAP(HEAP *h,void *value)
 {
     BSTNODE * newNode = newBSTNODE(value);
     buildStack = newSTACK(NULL, freeBSTNODE(BSTNODE *) );
-    
+    inQueue = newQUEUE(NULL, freeBSTNODE(BSTNODE *) );
     push(buildStack, newNode);
+    enqueue(inQueue, newNode);
     
     if(h->size == 0)
     {
@@ -92,42 +94,18 @@ void insertHEAP(HEAP *h,void *value)
         return;
     }
     
+    BSTNODE * tmp = peekQUEUE(inQueue);
     
-    // To find the open spot we get the binary representatin of the size
-    // skip the msb, then the next digit we go right if 1 or left if 0. The LSB tells
-    // us put as the right child if 1, left if 0
-    int binaryLength = ceil(log(h->size));
-    int size = h->size;
-    BSTNODE * current = h->root
-    for( int i = binaryLength; i >= 0; i--)
+    if(getBSTNODEleft(tmp) == NULL)
     {
-            int bit = h & (2^i);
-            if(i == binaryLength)
-                continue;
-            
-            if(bit == 1)
-            {
-                current = getBSTNODEright(current);
-                continue;
-            }
-            if(bit == 0)
-            {
-                current = getBSTNODEleft(current);
-                continue;
-            }
-            
-            if(bit == 1 && i == 0)
-            {
-                setBSTNODEright(current,newNode);
-                setBSTNODEparent(newNode,current);
-                return;
-            }
-            if(bit == 0 && i == 0)
-            {
-                setBSTNODEleft(current,newNode);
-                setBSTNODEparent(newNode,current);
-                return;
-            }
+        setBSTNODEleft(tmp, newNode);
+        setBSTNODEparent(newNode, tmp);
+    }
+    else if (getBSTNODEright(tmp) == NULL)
+    {
+        setBSTNODEright(tmp, newNode);
+        setBSTNODEparent(newNode,tmp);
+        dequeue(inQueue);
     }
     
 }
@@ -147,7 +125,7 @@ void maxheapify(HEAP * heap, BSTNODE * n)
     {
         if(heap->compare(getBSTNODE(node), getBSTNODEleft(node)) < 0 &&  heap->compare(getBSTNODEleft(node), getBSTNODEright(node)) > 0)
         {
-                void * tmp = getBSTNODE(node)
+                void * tmp = getBSTNODE(node);
                 setBSTNODE(node, getBSTNODE( getBSTNODEleft(node)));
                 setBSTNODE(getBSTNODEleft(node), getBSTNODE(tmp));
                 node = getBSTNODEleft(node);
@@ -155,7 +133,7 @@ void maxheapify(HEAP * heap, BSTNODE * n)
         }
         if(heap->compare(getBSTNODE(node), getBSTNODEright(node)) < 0 &&  heap->compare(getBSTNODEleft(node), getBSTNODEright(node)) < 0)
         {
-                void * tmp = getBSTNODE(node)
+                void * tmp = getBSTNODE(node);
                 setBSTNODE(node, getBSTNODE( getBSTNODEright(node)));
                 setBSTNODE(getBSTNODEright(node), getBSTNODE(tmp));
                 node = getBSTNODEright(node);
