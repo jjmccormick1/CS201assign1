@@ -4,6 +4,7 @@
  
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include "scanner.h"
 #include "heap.h"
 
@@ -15,6 +16,7 @@ void processInts(char *);
 int intcomp(int , int);
 void processReal(char *);
 void processToken(char *);
+void displayInt(void *);
 
 //globals
 int increasing = 0; //0 = dec, 1 = inc
@@ -22,11 +24,13 @@ int increasing = 0; //0 = dec, 1 = inc
 
 int main(int argc,char **argv)
 {
-    int argIndex;
+    //int argIndex;
 
     if (argc == 1) Fatal("%d arguments!\n",argc-1);
 
-    argIndex = processOptions(argc,argv);
+    processOptions(argc,argv);
+    
+    return 0;
 }
 
 void
@@ -134,7 +138,7 @@ void printVersion()
 
 void processInts(char * filename)
 {
-    HEAP * heap = newHEAP(&fprintf("%d", int, stdout), &intcomp(int , int), &free(int ));
+    HEAP * heap = newHEAP(displayInt, intcomp, free);
     FILE *fp;
     fp = fopen (filename,"r");
     if (fp == NULL) {
@@ -149,7 +153,7 @@ void processInts(char * filename)
     showHEAP();
 }
 
-int intcomp(int am, int b)
+int intcomp(int a, int b)
 {
         return a-b;
 }
@@ -183,4 +187,9 @@ void processToken(char * filename)
     }
     fixHEAP(heap);
     showHEAP();
+}
+
+void displayInt(void * in)
+{
+    fprintf("%d", in, stdout);
 }

@@ -3,8 +3,7 @@
 // dll.c
 // CS201 Assignment 0
 #include <stdio.h>
-#include "dll.h"
-#include "node.h"    
+#include "dll.h"  
 #include <assert.h>
 #include <stdlib.h>
 
@@ -204,8 +203,13 @@ void freeDLL(DLL *items)
     free(items);
     return;
 }
-
+/////////////////////////
 //node.c here for privacy
+/////////////////////////
+
+
+
+
 struct node
     {
     void *value;

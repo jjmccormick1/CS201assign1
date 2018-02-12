@@ -20,7 +20,7 @@
     extern void    setBSTNODEright(BSTNODE *n,BSTNODE *replacement);
     extern BSTNODE *getBSTNODEparent(BSTNODE *n);
     extern void    setBSTNODEparent(BSTNODE *n,BSTNODE *replacement);
-    extern void    freeBSTNODE(BSTNODE *n,void (*free)(void *));
+    extern void    freeBSTNODE(BSTNODE *n);
 
     //////////////////////////////
     //          bst.h           //
@@ -64,6 +64,7 @@
         void (*)(void *));          //free
     extern void insertHEAP(HEAP *h,void *value);
     extern void buildHEAP(HEAP *h);
+    extern void maxheapify(HEAP * heap, BSTNODE * n);
     extern void *peekHEAP(HEAP *h);
     extern void *extractHEAP(HEAP *h);
     extern int  sizeHEAP(HEAP *h);

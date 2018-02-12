@@ -63,12 +63,9 @@ struct heap
     void (*display)(void *,FILE *);
     int (*compare)(void *,void *);
     void (*free)(void *);
-}
+};
     
-HEAP *newHEAP(
-        void (*d)(void *,FILE *),    //display
-        int (*c)(void *,void *),     //compare
-        void (*f)(void *))          //free
+HEAP *newHEAP(void (*d)(void *,FILE *), int (*c)(void *,void *), void (*f)(void *))      
 {
     HEAP * heap = malloc(sizeof(HEAP));
     heap->root = NULL;
@@ -82,8 +79,8 @@ HEAP *newHEAP(
 void insertHEAP(HEAP *h,void *value)
 {
     BSTNODE * newNode = newBSTNODE(value);
-    buildStack = newSTACK(NULL, freeBSTNODE(BSTNODE *) );
-    inQueue = newQUEUE(NULL, freeBSTNODE(BSTNODE *) );
+    buildStack = newSTACK(NULL, freeBSTNODE );
+    inQueue = newQUEUE(NULL, freeBSTNODE );
     push(buildStack, newNode);
     enqueue(inQueue, newNode);
     
@@ -113,7 +110,7 @@ void buildHEAP(HEAP *h)
 {
     while(sizeSTACK(buildStack) > 0)
     {
-        heapify(h, pop(buildStack));
+        maxheapify(h, pop(buildStack));
     }
 }
 
@@ -141,11 +138,12 @@ void maxheapify(HEAP * heap, BSTNODE * n)
         }
         else
             return;
+    }
 }
 
 void *peekHEAP(HEAP *h)
 {
-        return heap->root;
+        return h->root;
 }
 
 void *extractHEAP(HEAP *h)
@@ -166,7 +164,8 @@ void *extractHEAP(HEAP *h)
     }
     freeBSTNODE(lastNode);
     
-    heapify(h->root);
+    maxheapify(h,h->root);
+	return ret;
 }
 
 int  sizeHEAP(HEAP *h)
@@ -174,8 +173,8 @@ int  sizeHEAP(HEAP *h)
         return h->size;
 }
 
-void displayHEAP(HEAP *h,FILE *fp)
-void displayHEAPdebug(HEAP *h)
+void displayHEAP(HEAP *h,FILE *fp){}
+void displayHEAPdebug(HEAP *h){}
 
 void freeHEAP(HEAP *h)
 {
@@ -183,9 +182,9 @@ void freeHEAP(HEAP *h)
     {
         freeBSTNODE( pop(buildStack));
     }
-    free(h->display)
-    free(h->compare)
-    free(h->free)
+    free(h->display);
+    free(h->compare);
+    free(h->free);
 }
     
     
