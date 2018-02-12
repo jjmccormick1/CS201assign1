@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include "scanner.h"
 #include "heap.h"
 
@@ -13,10 +14,14 @@ static int processOptions(int,char **);
 void Fatal(char *,...);
 void printVersion();
 void processInts(char *);
-int intcomp(int , int);
+int intcomp(void * , void *);
+void displayInt(void *, FILE *);
 void processReal(char *);
+int realcomp(void *, void *);
+void displayReal(void *, FILE *);
 void processToken(char *);
-void displayInt(void *);
+int tokencomp(void *, void *);
+void displayToken(void *, FILE *);
 
 //globals
 int increasing = 0; //0 = dec, 1 = inc
@@ -47,8 +52,7 @@ Fatal(char *fmt, ...)
 }
 
     
-    static int
-processOptions(int argc, char **argv)
+static int processOptions(int argc, char **argv)
 {
     int argIndex;
     int argUsed;
@@ -142,54 +146,78 @@ void processInts(char * filename)
     FILE *fp;
     fp = fopen (filename,"r");
     if (fp == NULL) {
-        printf ("File not created");
-        return 1;
+        printf("File not created");
+        return;
     }
     while (!feof(fp))
     {
-        insertHEAP(heap, readInt(fp));
+        int read = readInt(fp);
+        insertHEAP(heap, &read);
     }
-    fixHEAP(heap);
-    showHEAP();
+    buildHEAP(heap);
+    displayHEAP(heap,stdout);
 }
 
-int intcomp(int a, int b)
+int intcomp(void * a, void * b)
 {
-        return a-b;
+        return ((int*)a)  - ((int*)b);
 }
+
+void displayInt(void * in, FILE * fp)
+{
+    fprintf(fp,"%d", (int)in);
+}
+
 
 void processReal(char * filename)
 {
+    HEAP * heap = newHEAP(displayReal, realcomp, free);
     FILE *fp;
     fp = fopen (filename,"r");
     if (fp == NULL) {
         printf ("File not created");
-        return 1;
+        return;
     }
     while (!feof(fp))
     {
-        insertHEAP(heap, readInt(fp));
+        char * read = readString(fp);
+        insertHEAP(heap, (void *)read);
     }
-    fixHEAP(heap);
-    showHEAP();
+    buildHEAP(heap);
+    displayHEAP(heap,stdout);
+}
+int realcomp(void * a, void * b)
+{
+    return ((float*)a) - ((float*)b);
+}
+
+void displayReal(void * in, FILE * fp)
+{
+    fprintf(fp, "%f", (double*)in);   
 }
 void processToken(char * filename)
 {
+    HEAP * heap = newHEAP(displayReal, realcomp, free);
     FILE *fp;
     fp = fopen (filename,"r");
     if (fp == NULL) {
         printf ("File not created");
-        return 1;
+        return;
     }
     while (!feof(fp))
     {
-        insertHEAP(heap, readInt(fp));
+        insertHEAP(heap, readToken(fp));
     }
-    fixHEAP(heap);
-    showHEAP();
+    buildHEAP(heap);
+    displayHEAP(heap,stdout);
 }
 
-void displayInt(void * in)
+int tokencomp(void * a, void * b)
 {
-    fprintf("%d", in, stdout);
+        return strcmp((char*)a,(char *)b);
+}
+
+void displayToken(void * in, FILE * fp)
+{
+  fprintf(fp, "%s", in);   
 }
