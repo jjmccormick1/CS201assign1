@@ -193,7 +193,7 @@ int realcomp(void * a, void * b)
 
 void displayReal(void * in, FILE * fp)
 {
-    fprintf(fp, "%f", (double*)in);   
+    fprintf(fp, "%f", (double)in);   
 }
 void processToken(char * filename)
 {

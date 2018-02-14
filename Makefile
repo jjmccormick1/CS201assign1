@@ -1,12 +1,12 @@
-CC=gcc
-CFLAGS=  -Wall -Wextra -c -ggdb -pedantic -std=c99 -O0
-LFLAGS=  -Wall -Wextra -pedantic  -std=c99 -ggdb
+CC=clang
+CFLAGS=  -Wall -Wextra  -c -ggdb -pedantic -std=c99 -O0
+LFLAGS=  -Wall -Wextra  -pedantic  -std=c99 -ggdb
 
 all: heapsort
 
-dll.o:
+dll.o: dll.c dll.h
 	$(CC) $(CFLAGS) dll.c dll.h
-sll.o: 
+sll.o: sll.c sll.h
 	$(CC) $(CFLAGS) sll.c sll.h
 stack.o: dll.o
 	$(CC) $(CFLAGS) stack.c stack.h 
@@ -19,7 +19,7 @@ heap.o: stack.o queue.o
 heapsort.o: 
 	$(CC) $(CFLAGS) heapsort.c
 heapsort: heap.o heapsort.o scanner.o
-	$(CC) $(LFLAGS) heapsort.o heap.o stack.o dll.o  queue.o sll.o scanner.o -o heapsort
+	$(CC) $(LFLAGS) heapsort.o heap.o stack.o dll.o queue.o sll.o scanner.o -o heapsort
 
 valgrind: heapsort
 	@./valgrind heapsort

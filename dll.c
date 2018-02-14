@@ -7,6 +7,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
+
+
+
 struct dll
 {
     NODE *head;
@@ -207,9 +210,7 @@ void freeDLL(DLL *items)
 //node.c here for privacy
 /////////////////////////
 
-
-
-
+//node.c included here for privacy
 struct node
     {
     void *value;
@@ -265,3 +266,6 @@ freeNODE(NODE *n,void (*release)(void *))
     if (release != 0) release(n->value);
     free(n);
     }
+
+
+

@@ -55,7 +55,7 @@ void    freeBSTNODE(BSTNODE *n)
     
 QUEUE * inQueue;
 STACK * buildStack;  //stack to keep track of inserted nodes for build heap operation
-
+void freebstnode(void *);
 struct heap 
 {
     BSTNODE * root;
@@ -75,12 +75,15 @@ HEAP *newHEAP(void (*d)(void *,FILE *), int (*c)(void *,void *), void (*f)(void 
     heap->free    = f;
     return heap;
 }
-
+void freebstnode(void * in)
+{
+        freeBSTNODE((BSTNODE*)in);
+}
 void insertHEAP(HEAP *h,void *value)
 {
     BSTNODE * newNode = newBSTNODE(value);
-    buildStack = newSTACK(NULL, freeBSTNODE );
-    inQueue = newQUEUE(NULL, freeBSTNODE );
+    buildStack = newSTACK(NULL, freebstnode );
+    inQueue = newQUEUE(NULL, freebstnode );
     push(buildStack, newNode);
     enqueue(inQueue, newNode);
     
@@ -173,8 +176,14 @@ int  sizeHEAP(HEAP *h)
         return h->size;
 }
 
-void displayHEAP(HEAP *h,FILE *fp){}
-void displayHEAPdebug(HEAP *h){}
+void displayHEAP(HEAP *h,FILE *fp)
+{
+    fprintf(fp,"%d",(int)getBSTNODE(h->root));
+}
+void displayHEAPdebug(HEAP *h,FILE *fp)
+{
+    fprintf(fp,"%d",(int)getBSTNODE(h->root));
+}
 
 void freeHEAP(HEAP *h)
 {
@@ -182,9 +191,7 @@ void freeHEAP(HEAP *h)
     {
         freeBSTNODE( pop(buildStack));
     }
-    free(h->display);
-    free(h->compare);
-    free(h->free);
+    free(h->root);
 }
     
     

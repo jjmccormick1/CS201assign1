@@ -69,6 +69,6 @@
     extern void *extractHEAP(HEAP *h);
     extern int  sizeHEAP(HEAP *h);
     extern void displayHEAP(HEAP *h,FILE *fp);
-    extern void displayHEAPdebug(HEAP *h);
+    extern void displayHEAPdebug(HEAP *h,FILE *fp);
     extern void freeHEAP(HEAP *h);
     #endif

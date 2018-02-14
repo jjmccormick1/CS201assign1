@@ -6,6 +6,9 @@
 #include <assert.h>
 #include "sll.h"
 
+
+
+
 struct sll
 {
     NODE * head;
@@ -189,59 +192,3 @@ void freeSLL(SLL *items)
     return;
 }
 
-//node.c included here for privacy
-struct node
-    {
-    void *value;
-    NODE *next;
-    NODE *prev;
-    };
-
-/*************** public interface *************/
-
-/* constructors */
-
-NODE *
-newNODE(void *v,NODE *n)
-    {
-    NODE *p = malloc(sizeof(NODE));
-    if (p == 0) { fprintf(stderr,"out of memory\n"); exit(1); }
-    p->value = v;
-    p->next = n;
-    p->prev = NULL;
-    return p;
-    }
-
-/* accessors */
-
-void  *getNODEvalue(NODE *n) { return n->value; }
-NODE  *getNODEnext(NODE *n)  { return n->next; }
-NODE  *getNODEprev(NODE *n)  { return n->prev; }
-
-/* mutators */
-void setNODEprev(NODE *n, NODE *p)  { n->prev = p; }
-void  setNODEvalue(NODE *n,void *v) { n->value = v; }
-void  setNODEnext(NODE *n,NODE *p)  { n->next = p; }
-
-/* visualizers */
-
-void displayNODE(NODE *n,FILE *fp,void (*d)(FILE *,void *))
-    {
-    fprintf(fp,"[[");
-    d(fp,n->value);
-    fprintf(fp,"]]");
-    }
-
-void displayNODEdebug(NODE *n,FILE *fp,void (*d)(FILE *,void *))
-    {
-    fprintf(fp,"[[");
-    d(fp,n->value);
-    fprintf(fp,"@%p->%p]]",(void *)n,(void *)n->next);
-    }
-
-void
-freeNODE(NODE *n,void (*release)(void *))
-    {
-    if (release != 0) release(n->value);
-    free(n);
-    }
