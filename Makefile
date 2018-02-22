@@ -1,4 +1,4 @@
-CC=clang
+CC=gcc
 CFLAGS=  -Wall -Wextra  -c -ggdb -pedantic -std=c99 -O0
 LFLAGS=  -Wall -Wextra  -pedantic  -std=c99 -ggdb
 
@@ -22,7 +22,10 @@ heapsort: heap.o heapsort.o scanner.o
 	$(CC) $(LFLAGS) heapsort.o heap.o stack.o dll.o queue.o sll.o scanner.o -o heapsort
 
 valgrind: heapsort
-	@./valgrind heapsort
+	@valgrind heapsort
+
+test: heapsort
+	@./heapsort -i data
 
 clean:
 	@rm -f *.o

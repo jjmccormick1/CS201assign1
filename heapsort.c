@@ -155,7 +155,12 @@ void processInts(char * filename)
         insertHEAP(heap, &read);
     }
     buildHEAP(heap);
-    displayHEAP(heap,stdout);
+    
+    while(sizeHEAP(heap) != 0)
+    {
+            void * out = extractHEAP(heap);
+            displayInt(out,stdout);
+    }
 }
 
 int intcomp(void * a, void * b)
@@ -165,7 +170,9 @@ int intcomp(void * a, void * b)
 
 void displayInt(void * in, FILE * fp)
 {
-    fprintf(fp,"%d", (int)in);
+    int *ptmp = (int*)in;
+    int tmp = *ptmp;
+    fprintf(fp,"%d", tmp);
 }
 
 
@@ -184,7 +191,12 @@ void processReal(char * filename)
         insertHEAP(heap, (void *)read);
     }
     buildHEAP(heap);
-    displayHEAP(heap,stdout);
+    
+    while(sizeHEAP(heap) != 0)
+    {
+            void * out = extractHEAP(heap);
+            displayReal(out,stdout);
+    }
 }
 int realcomp(void * a, void * b)
 {
@@ -211,7 +223,12 @@ void processToken(char * filename)
         insertHEAP(heap, readToken(fp));
     }
     buildHEAP(heap);
-    displayHEAP(heap,stdout);
+    
+    while(sizeHEAP(heap) != 0)
+    {
+            void * out = extractHEAP(heap);
+            displayToken(out,stdout);
+    }
 }
 
 int tokencomp(void * a, void * b)
@@ -221,5 +238,6 @@ int tokencomp(void * a, void * b)
 
 void displayToken(void * in, FILE * fp)
 {
-  fprintf(fp, "%s", in);   
+    char * string = (char *)in;
+    fprintf(fp, "%s", string);   
 }

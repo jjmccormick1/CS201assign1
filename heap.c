@@ -30,7 +30,7 @@ BSTNODE *newBSTNODE(void *v)
     return node;
 }
 
-void    *getBSTNODE(BSTNODE *n)                          { return n->value; }
+void    *getBSTNODE(BSTNODE *n)                          { return n->value;}
 void    setBSTNODE(BSTNODE *n,void *value)               { n->value = value; }
 BSTNODE *getBSTNODEleft(BSTNODE *n)                      { return n->left; }
 void    setBSTNODEleft(BSTNODE *n,BSTNODE *replacement)  { n->left = replacement; }
@@ -87,6 +87,7 @@ void insertHEAP(HEAP *h,void *value)
     push(buildStack, newNode);
     enqueue(inQueue, newNode);
     
+    
     if(h->size == 0)
     {
         h->root = newNode;
@@ -96,15 +97,17 @@ void insertHEAP(HEAP *h,void *value)
     
     BSTNODE * tmp = peekQUEUE(inQueue);
     
-    if(getBSTNODEleft(tmp) == NULL)
+    if(tmp != NULL && getBSTNODEleft(tmp) == NULL)
     {
         setBSTNODEleft(tmp, newNode);
         setBSTNODEparent(newNode, tmp);
+        h->size++;
     }
-    else if (getBSTNODEright(tmp) == NULL)
+    else if (tmp != NULL && getBSTNODEright(tmp) == NULL)
     {
         setBSTNODEright(tmp, newNode);
         setBSTNODEparent(newNode,tmp);
+        h->size++;
         dequeue(inQueue);
     }
     
@@ -151,7 +154,7 @@ void *peekHEAP(HEAP *h)
 
 void *extractHEAP(HEAP *h)
 {
-    BSTNODE * lastNode = pop(buildStack);
+    BSTNODE * lastNode = (BSTNODE*)pop(buildStack);
     void * ret = getBSTNODE(h->root);
     void * tmp = getBSTNODE(lastNode);
     
@@ -178,11 +181,14 @@ int  sizeHEAP(HEAP *h)
 
 void displayHEAP(HEAP *h,FILE *fp)
 {
-    fprintf(fp,"%d",(int)getBSTNODE(h->root));
+	int *temp = (int*)getBSTNODE(h->root);    
+    int tmp = *temp;
+    fprintf(fp,"%d",tmp);
 }
 void displayHEAPdebug(HEAP *h,FILE *fp)
 {
-    fprintf(fp,"%d",(int)getBSTNODE(h->root));
+    fprintf(fp,"heap size %d\n",sizeHEAP(h));
+    fprintf(fp,"bst size %d\n",sizeHEAP(h));
 }
 
 void freeHEAP(HEAP *h)
