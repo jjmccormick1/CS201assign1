@@ -22,7 +22,7 @@ heapsort: heap.o heapsort.o scanner.o
 	$(CC) $(LFLAGS) heapsort.o heap.o stack.o dll.o queue.o scanner.o -o heapsort
 
 valgrind: heapsort
-	@valgrind heapsort
+	@valgrind heapsort -i data
 
 test: heapsort
 	@./heapsort -i data

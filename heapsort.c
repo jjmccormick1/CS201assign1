@@ -160,6 +160,7 @@ void processInts(char * filename)
     {
             void * out = extractHEAP(heap);
             displayInt(out,stdout);
+            printf("\n");
     }
 }
 
@@ -170,7 +171,9 @@ int intcomp(void * a, void * b)
 
 void displayInt(void * in, FILE * fp)
 {
-    int *ptmp = (int*)in;
+    if(in == NULL)
+        return;
+    int *ptmp = in;
     int tmp = *ptmp;
     fprintf(fp,"%d", tmp);
 }

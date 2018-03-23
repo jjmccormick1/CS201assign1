@@ -82,8 +82,8 @@ void freebstnode(void * in)
 void insertHEAP(HEAP *h,void *value)
 {
     BSTNODE * newNode = newBSTNODE(value);
-    buildStack = newSTACK(NULL, freebstnode );
-    inQueue = newQUEUE(NULL, freebstnode );
+    buildStack = newSTACK(h->display, freebstnode );
+    inQueue = newQUEUE(h->display, freebstnode );
     push(buildStack, newNode);
     enqueue(inQueue, newNode);
     
@@ -124,9 +124,9 @@ void maxheapify(HEAP * heap, BSTNODE * n)
 {
     BSTNODE * node = n;
     
-    while(node != NULL)
+    while(node != NULL && getBSTNODEleft(node) != NULL && getBSTNODEright(node) != NULL)
     {
-        if(heap->compare(getBSTNODE(node), getBSTNODEleft(node)) < 0 &&  heap->compare(getBSTNODEleft(node), getBSTNODEright(node)) > 0)
+        if(heap->compare(getBSTNODE(node), getBSTNODE(getBSTNODEleft(node))) < 0 &&  heap->compare(getBSTNODE(getBSTNODEleft(node)), getBSTNODE(getBSTNODEright(node))) > 0)
         {
                 void * tmp = getBSTNODE(node);
                 setBSTNODE(node, getBSTNODE( getBSTNODEleft(node)));
@@ -134,11 +134,11 @@ void maxheapify(HEAP * heap, BSTNODE * n)
                 node = getBSTNODEleft(node);
                 continue;
         }
-        if(heap->compare(getBSTNODE(node), getBSTNODEright(node)) < 0 &&  heap->compare(getBSTNODEleft(node), getBSTNODEright(node)) < 0)
+        if(heap->compare(getBSTNODE(node), getBSTNODE(getBSTNODEright(node))) < 0 &&  heap->compare(getBSTNODE(getBSTNODEleft(node)), getBSTNODE(getBSTNODEright(node))) < 0)
         {
                 void * tmp = getBSTNODE(node);
                 setBSTNODE(node, getBSTNODE( getBSTNODEright(node)));
-                setBSTNODE(getBSTNODEright(node), getBSTNODE(tmp));
+                setBSTNODE(getBSTNODEright(node), tmp);
                 node = getBSTNODEright(node);
                 continue;
         }
@@ -154,7 +154,10 @@ void *peekHEAP(HEAP *h)
 
 void *extractHEAP(HEAP *h)
 {
-    BSTNODE * lastNode = (BSTNODE*)pop(buildStack);
+    BSTNODE * lastNode = pop(buildStack);
+    h->size--;
+    if(lastNode == NULL)
+        return;
     void * ret = getBSTNODE(h->root);
     void * tmp = getBSTNODE(lastNode);
     

@@ -87,27 +87,35 @@ void displayQUEUE(QUEUE *items,FILE * fp)
         printf(">");
 }
 void displayQUEUEdebug(QUEUE *items,FILE * fp)
-{
+{   
+    if (items->size == 0)
+    {
+        printf("head->{},tail->{}");
+        return;
+    }
     if(items->size == 1)
-        {
+    {
             printf("head->{");
             items->display((items->head)->value, fp);
             printf("},tail->{");
             items->display((items->head)->value, fp);
             printf("}");
             return;
-        }
-        printf("head->{");
-        NODE * step = items->head;
-        for(int i = 0; i < items->size ; i++)
-        {
-            if(i == (items->size - 1))
-                printf("}, tail->{");
-            items->display(step->value, fp);
-            if(i < items->size-2)
+    }
+    printf("Size of queue is : %d", items->size);
+    printf("head->{");
+    NODE * step = items->head;
+    for(int i = 0; i < items->size ; i++)
+    {
+        //if(i == (items->size -1 ))
+          //  printf("},tail->{");
+        items->display(step->value, fp);
+        if(i < items->size-1)
                 printf(",");
             
         }
+        printf("},tail->{");
+    items->display((items->last)->value, fp);
         printf("}");
 }
 
